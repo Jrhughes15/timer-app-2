@@ -78,15 +78,17 @@ hr {
     background-color: #555;
 }
 
+/* Timer Creation Section Styling */
 #timer-creation {
     margin-top: 15px;
     text-align: center;
 }
 
 #timer-name {
-    padding: 12px;
-    font-size: 1.1em;
-    width: 80%;
+    padding: 10px;
+    font-size: 1em;
+    width: 90%; /* Responsive width */
+    max-width: 300px;
     margin-bottom: 10px;
 }
 
@@ -96,17 +98,20 @@ hr {
     align-items: center;
     gap: 5px;
     margin: 10px 0;
+    flex-wrap: wrap;
 }
 
 .dial {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 80px;
 }
 
 .button-group {
     display: flex;
     gap: 2px;
+    margin-bottom: 5px;
 }
 
 .separator {
@@ -116,9 +121,9 @@ hr {
 }
 
 input[type="number"] {
-    width: 100px;
-    padding: 10px;
-    font-size: 1.3em;
+    width: 60px;
+    padding: 8px;
+    font-size: 1em;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -126,8 +131,8 @@ input[type="number"] {
 }
 
 .small-btn {
-    padding: 10px 15px;
-    font-size: 0.9em;
+    padding: 8px 10px;
+    font-size: 0.8em;
     cursor: pointer;
     border: none;
     border-radius: 5px;
@@ -297,10 +302,9 @@ input[type="number"] {
     margin: 10px 0;
 }
 
-/* Updated timer-actions styling to align buttons in a row */
 .timer-card .timer-actions {
     display: flex;
-    justify-content: space-around; /* Space the buttons evenly */
+    justify-content: space-around;
     margin-top: 10px;
 }
 
@@ -312,15 +316,14 @@ input[type="number"] {
     background-color: #333;
     color: white;
     cursor: pointer;
-    flex: 1; /* Each button takes equal space */
-    margin: 0 5px; /* Add spacing between buttons */
+    flex: 1;
+    margin: 0 5px;
 }
 
 .timer-card button:hover {
     background-color: #555;
 }
 
-/* Color classes for countdown stages */
 .timer-card.green { background-color: #dff0d8; }
 .timer-card.blue { background-color: #d9edf7; }
 .timer-card.orange { background-color: #fcf8e3; }
@@ -351,12 +354,6 @@ input[type="number"] {
     margin-bottom: 15px;
 }
 
-.modal-content label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
 .modal-content input {
     width: 100%;
     padding: 8px;
@@ -371,30 +368,59 @@ input[type="number"] {
     cursor: pointer;
 }
 
-.increment-decrement-container {
+.modal-buttons {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.increment-decrement-container input {
-    width: 60px;
-    padding: 5px;
-    text-align: center;
+.modal-action-btn {
+    padding: 10px 20px;
     font-size: 1.2em;
-}
-
-.increment-decrement-container button {
-    padding: 5px 10px;
-    font-size: 1em;
+    cursor: pointer;
     border: none;
+    border-radius: 5px;
     background-color: #333;
     color: white;
-    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-.increment-decrement-container button:hover {
+.modal-action-btn:hover {
     background-color: #555;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    #timer-creation {
+        padding: 10px;
+    }
+
+    #timer-name {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .dial-container {
+        gap: 8px;
+    }
+
+    .dial {
+        min-width: 70px;
+    }
+
+    input[type="number"] {
+        padding: 6px;
+        font-size: 0.9em;
+    }
+
+    .small-btn {
+        padding: 5px 7px;
+        font-size: 0.8em;
+    }
+
+    #start-timer-btn, #add-timer-btn, #reset-timer-btn {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
 }
