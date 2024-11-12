@@ -1,0 +1,400 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+#container {
+    background-color: white;
+    width: 85%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+hr {
+    width: 100%;
+    border: 1px solid #333;
+    margin: 10px 0;
+}
+
+#date-time {
+    margin: 10px 0;
+}
+
+#current-date, #current-time {
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+
+.stopwatch {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.stopwatch-display {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.stopwatch-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.stopwatch-buttons .btn {
+    flex: 1 1 24%;
+    margin: 2px;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.stopwatch-buttons .btn:hover {
+    background-color: #555;
+}
+
+#timer-creation {
+    margin-top: 15px;
+    text-align: center;
+}
+
+#timer-name {
+    padding: 12px;
+    font-size: 1.1em;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+.dial-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.dial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-group {
+    display: flex;
+    gap: 2px;
+}
+
+.separator {
+    font-size: 1.5em;
+    padding: 0 5px;
+    color: #333;
+}
+
+input[type="number"] {
+    width: 100px;
+    padding: 10px;
+    font-size: 1.3em;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.small-btn {
+    padding: 10px 15px;
+    font-size: 0.9em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.small-btn:hover {
+    background-color: #555;
+}
+
+.timer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#start-timer-btn, #add-timer-btn, #reset-timer-btn {
+    padding: 15px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#start-timer-btn:hover, #add-timer-btn:hover, #reset-timer-btn:hover {
+    background-color: #555;
+}
+
+#added-timers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.timer-button-container {
+    display: flex;
+    align-items: stretch;
+    height: 40px;
+}
+
+.timer-btn {
+    padding: 0 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: #333;
+    color: white;
+    min-width: 80px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.delete-btn {
+    padding: 0 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.timer-btn:hover {
+    background-color: #555;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+#premade-timers {
+    margin-top: 20px;
+}
+
+.preset-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+.preset-btn:hover {
+    background-color: #555;
+}
+
+.preset-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 8px 0;
+    padding: 5px;
+}
+
+.preset-grid button {
+    width: 22%;
+    padding: 8px 5px;
+    font-size: 1em;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    line-height: 1.2;
+    white-space: pre-wrap;
+    text-align: center;
+    max-width: 120px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.preset-grid button:hover {
+    background-color: #666;
+}
+
+#active-timers {
+    margin-top: 20px;
+}
+
+.timer-card {
+    background-color: #f8f8f8;
+    padding: 20px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.timer-card h3 {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+.timer-card p {
+    font-size: 1.2em;
+}
+
+.timer-card .countdown {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+/* Updated timer-actions styling to align buttons in a row */
+.timer-card .timer-actions {
+    display: flex;
+    justify-content: space-around; /* Space the buttons evenly */
+    margin-top: 10px;
+}
+
+.timer-card button {
+    padding: 10px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    flex: 1; /* Each button takes equal space */
+    margin: 0 5px; /* Add spacing between buttons */
+}
+
+.timer-card button:hover {
+    background-color: #555;
+}
+
+/* Color classes for countdown stages */
+.timer-card.green { background-color: #dff0d8; }
+.timer-card.blue { background-color: #d9edf7; }
+.timer-card.orange { background-color: #fcf8e3; }
+.timer-card.red { background-color: #f2dede; }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 8px;
+    font-size: 1em;
+    margin-top: 5px;
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.increment-decrement-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.increment-decrement-container input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.increment-decrement-container button {
+    padding: 5px 10px;
+    font-size: 1em;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+}
+
+.increment-decrement-container button:hover {
+    background-color: #555;
+}
