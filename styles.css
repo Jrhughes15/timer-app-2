@@ -44,6 +44,7 @@ hr {
     margin: 5px 0;
 }
 
+/* Stopwatch Styling */
 .stopwatch {
     margin-top: 10px;
     text-align: center;
@@ -80,59 +81,40 @@ hr {
 
 /* Timer Creation Section Styling */
 #timer-creation {
-    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;       /* Center horizontally */
+    justify-content: center;    /* Center vertically */
     text-align: center;
+    height: 100%;               /* Set to 100% if you want it to take full height */
+    width: 100%;                /* Set to 100% or an appropriate width for centering */
 }
 
-#timer-name {
-    padding: 10px;
-    font-size: 1em;
-    width: 90%; /* Responsive width */
+
+#timer-name, #timer-input {
+    padding: 12px;
+    font-size: 1.3em;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
     max-width: 300px;
     margin-bottom: 10px;
 }
 
-.dial-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    margin: 10px 0;
-    flex-wrap: wrap;
+/* Number Pad Styling */
+#number-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 10px auto;
 }
 
-.dial {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 80px;
-}
-
-.button-group {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 5px;
-}
-
-.separator {
+#number-pad button {
+    padding: 15px;
+    width: 75px;
     font-size: 1.5em;
-    padding: 0 5px;
-    color: #333;
-}
-
-input[type="number"] {
-    width: 60px;
-    padding: 8px;
-    font-size: 1em;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 5px 0;
-}
-
-.small-btn {
-    padding: 8px 10px;
-    font-size: 0.8em;
     cursor: pointer;
     border: none;
     border-radius: 5px;
@@ -141,18 +123,18 @@ input[type="number"] {
     transition: background-color 0.3s;
 }
 
-.small-btn:hover {
+#number-pad button:hover {
     background-color: #555;
 }
 
 .timer-buttons {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 0px;
 }
 
-#start-timer-btn, #add-timer-btn, #reset-timer-btn {
-    padding: 15px 20px;
+#start-timer-btn, #add-timer-btn {
+    padding: 15px 30px;
     font-size: 1.2em;
     cursor: pointer;
     border: none;
@@ -162,7 +144,7 @@ input[type="number"] {
     transition: background-color 0.3s;
 }
 
-#start-timer-btn:hover, #add-timer-btn:hover, #reset-timer-btn:hover {
+#start-timer-btn:hover, #add-timer-btn:hover {
     background-color: #555;
 }
 
@@ -324,11 +306,13 @@ input[type="number"] {
     background-color: #555;
 }
 
+/* Color indicators for countdown */
 .timer-card.green { background-color: #dff0d8; }
 .timer-card.blue { background-color: #d9edf7; }
 .timer-card.orange { background-color: #fcf8e3; }
 .timer-card.red { background-color: #f2dede; }
 
+/* Modal Styling */
 .modal {
     position: fixed;
     top: 0;
@@ -390,37 +374,48 @@ input[type="number"] {
     background-color: #555;
 }
 
-/* Responsive adjustments for smaller screens */
+/* Responsive adjustments */
 @media (max-width: 600px) {
     #timer-creation {
-        padding: 10px;
+        max-width: 100%;
     }
 
-    #timer-name {
-        padding: 8px;
-        font-size: 0.9em;
+    #timer-input {
+        max-width: 100%;
     }
 
-    .dial-container {
-        gap: 8px;
-    }
-
-    .dial {
-        min-width: 70px;
-    }
-
-    input[type="number"] {
-        padding: 6px;
-        font-size: 0.9em;
-    }
-
-    .small-btn {
-        padding: 5px 7px;
-        font-size: 0.8em;
-    }
-
-    #start-timer-btn, #add-timer-btn, #reset-timer-btn {
-        padding: 10px 15px;
-        font-size: 1em;
+    .preset-grid button {
+        width: 45%;
     }
 }
+
+.timer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Remove space between buttons */
+}
+
+#start-timer-btn, #add-timer-btn {
+    padding: 15px 15px;
+    width: 100px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.3s;
+    flex: .75; /* Make each button take equal width */
+}
+
+.timer-buttons button:not(:last-child) {
+    margin-right: 0; /* Remove extra right margin */
+}
+
+#start-timer-btn:hover, #add-timer-btn:hover {
+    background-color: #555;
+}
+
+
+
+
