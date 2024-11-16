@@ -1,4 +1,9 @@
-// Function to update current date and time display
+// -------------------------------
+// 1. Date and Time Display
+// -------------------------------
+
+
+// ------ Updates the date and time displayed on the page every second.
 function updateDateTime() {
     const now = new Date();
     const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
@@ -7,9 +12,17 @@ function updateDateTime() {
 }
 setInterval(updateDateTime, 1000);
 
-// Stopwatch functionality
+
+// -------------------------------
+// 2. Stopwatch Functionality
+// -------------------------------
+
+
+// ------ Stores interval IDs for each stopwatch
 let stopwatchIntervals = {};
 
+
+// ------ Starts the stopwatch for a given ID.
 function startStopwatch(stopwatchId) {
     if (stopwatchIntervals[stopwatchId]) return;
 
@@ -25,23 +38,35 @@ function startStopwatch(stopwatchId) {
     }, 1000);
 }
 
+
+// ------ Stops the stopwatch for a given ID.
 function stopStopwatch(stopwatchId) {
     clearInterval(stopwatchIntervals[stopwatchId]);
     stopwatchIntervals[stopwatchId] = null;
 }
 
+
+// ------ Resets the stopwatch to 00:00:00.
 function resetStopwatch(stopwatchId) {
     clearInterval(stopwatchIntervals[stopwatchId]);
     stopwatchIntervals[stopwatchId] = null;
     document.getElementById(`${stopwatchId}-display`).textContent = "00:00:00";
 }
 
+
+// ------ Restarts the stopwatch from 00:00:00.
 function restartStopwatch(stopwatchId) {
     resetStopwatch(stopwatchId);
     startStopwatch(stopwatchId);
 }
 
-// Helper function to format the time input as HH:MM:SS
+
+// -------------------------------
+// 3. Timer Input Handling
+// -------------------------------
+
+
+// ------ Formats a numeric input as HH:MM:SS.
 function formatTimeInput(value) {
     const digits = value.replace(/\D/g, '').slice(-6); // Only allow up to 6 digits
     let seconds = 0, minutes = 0, hours = 0;
@@ -59,27 +84,28 @@ function formatTimeInput(value) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Add a digit to the timer input and format it
+
+// ------ Add a digit to the timer input and format it
 function appendDigit(digit) {
     const timerInput = document.getElementById("timer-input");
     timerInput.value += digit; // Append digit to current value
     timerInput.value = formatTimeInput(timerInput.value);
 }
 
-// Clear the timer input field
+// ------ Clear the timer input field
 function clearTimerInput() {
     const timerInput = document.getElementById("timer-input");
     timerInput.value = "";
 }
 
-// Remove the last digit from the timer input field
+// ------ Remove the last digit from the timer input field
 function backspaceTimerInput() {
     const timerInput = document.getElementById("timer-input");
     timerInput.value = timerInput.value.slice(0, -1);
     timerInput.value = formatTimeInput(timerInput.value);
 }
 
-// Helper function to parse the formatted input into total seconds
+// ------ Helper function to parse the formatted input into total seconds
 function parseTimeInput(value) {
     const parts = value.split(':').map(Number);
     const hours = parts[0] || 0;
@@ -88,7 +114,13 @@ function parseTimeInput(value) {
     return hours * 3600 + minutes * 60 + seconds;
 }
 
-// Timer creation and adjustment functionality
+
+// -------------------------------
+// 4. Timer Creation and Management
+// -------------------------------
+
+
+// ------ Starts a timer with the provided input.
 function startTimer() {
     const timeInput = document.getElementById("timer-input").value;
     const totalSeconds = parseTimeInput(timeInput);
@@ -97,14 +129,21 @@ function startTimer() {
         const timerName = document.getElementById("timer-name").value || timeInput;
         const endTime = new Date(Date.now() + totalSeconds * 1000);
         createCustomTimerCard(timerName, endTime, totalSeconds);
+
+        // Reset the timer creation fields after starting the timer
+        resetTimerFields();
     }
 }
 
+
+// ------ Resets the timer creation fields.
 function resetTimerFields() {
     document.getElementById("timer-name").value = "";
     document.getElementById("timer-input").value = "";
 }
 
+
+// ------ Adds a timer button with a delete option.
 function addTimer() {
     const timeInput = document.getElementById("timer-input").value;
     const totalSeconds = parseTimeInput(timeInput);
@@ -131,41 +170,56 @@ function addTimer() {
     }
 }
 
+// ------ Starts a timer from a button click.
 function startTimerFromButton(totalSeconds, timerName) {
     const endTime = new Date(Date.now() + totalSeconds * 1000);
     createCustomTimerCard(timerName, endTime, totalSeconds);
 }
 
+
+// -------------------------------
+// 5. Custom Timer Cards
+// -------------------------------
+
+
+// ------ Creates a custom timer card with worded-out duration.
 function createCustomTimerCard(title, targetTime, duration) {
     const timerCard = document.createElement('div');
     timerCard.className = 'timer-card custom-timer';
 
+    // Title of the Timer
     const titleElement = document.createElement('h3');
     titleElement.textContent = title;
     timerCard.appendChild(titleElement);
 
+    // Worded-out Duration + Target Time
     const targetInfo = document.createElement('p');
-    const targetString = targetTime.toLocaleTimeString('en-US');
-    targetInfo.textContent = `Target time: ${targetString}`;
+    const formattedDuration = formatDuration(duration); // Converts duration into "1 hour 2 min 30 sec"
+    const targetString = targetTime.toLocaleTimeString('en-US'); // Formats target time as "HH:MM:SS AM/PM"
+    targetInfo.textContent = `Target Time: ${formattedDuration} (${targetString})`;
     timerCard.appendChild(targetInfo);
 
+    // Countdown Display
     const countdownElement = document.createElement('p');
     countdownElement.className = 'countdown';
     timerCard.appendChild(countdownElement);
 
+    // Start the countdown
     let intervalId = startCountdown(targetTime, countdownElement);
 
+    // Timer Action Buttons (Edit and Clear)
     const timerActions = document.createElement('div');
     timerActions.className = 'timer-actions';
 
     // Edit Button
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
-    editButton.onclick = () => openEditModal(timerCard, duration, 'custom', (newDuration) => {
+    editButton.onclick = () => openEditModal(timerCard, duration, 'custom', (newDuration, newTitle) => {
         clearInterval(intervalId);
         const newTargetTime = new Date(Date.now() + newDuration * 1000);
         intervalId = startCountdown(newTargetTime, countdownElement);
-        targetInfo.textContent = `Target time: ${formatDuration(newDuration)} (${newTargetTime.toLocaleTimeString('en-US')})`;
+        timerCard.querySelector('h3').textContent = newTitle;
+        targetInfo.textContent = `Target Time: ${formatDuration(newDuration)} (${newTargetTime.toLocaleTimeString('en-US')})`;
     });
     timerActions.appendChild(editButton);
 
@@ -179,9 +233,13 @@ function createCustomTimerCard(title, targetTime, duration) {
     timerActions.appendChild(clearButton);
 
     timerCard.appendChild(timerActions);
+
+    // Append the card to the active timers section
     document.getElementById("active-timers").appendChild(timerCard);
 }
 
+
+// ------ Formats the duration into a readable string.
 function formatDuration(totalSeconds) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -193,6 +251,7 @@ function formatDuration(totalSeconds) {
     return result;
 }
 
+// ------ Starts the countdown for a timer card.
 function startCountdown(targetTime, countdownElement) {
     const timerCard = countdownElement.parentElement;
 
@@ -226,7 +285,13 @@ function startCountdown(targetTime, countdownElement) {
     }, 1000);
 }
 
-// Modal for editing timer
+
+// -------------------------------
+// 6. Modals and Utilities
+// -------------------------------
+
+
+// ------ Opens an edit modal for timers.
 function openEditModal(timerCard, duration, type, onSave) {
     const modal = document.createElement('div');
     modal.className = 'modal';
@@ -235,30 +300,88 @@ function openEditModal(timerCard, duration, type, onSave) {
     modalContent.className = 'modal-content';
 
     const modalTitle = document.createElement('h3');
-    modalTitle.textContent = 'Edit Timer';
+    modalTitle.textContent = type === 'custom' ? 'Edit Custom Timer' : 'Edit Preset Timer';
     modalContent.appendChild(modalTitle);
 
-    const timerInput = document.createElement('input');
-    timerInput.type = 'text';
-    timerInput.placeholder = 'Enter time (e.g., 23026 for 2:30:26)';
-    timerInput.maxLength = 6;
-    timerInput.value = formatTimeInput(duration.toString());
-    timerInput.addEventListener('input', function() {
-        this.value = formatTimeInput(this.value);
-    });
-    modalContent.appendChild(timerInput);
+    if (type === 'custom') {
+        // Title Input
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.value = timerCard.querySelector('h3').textContent;
+        titleInput.placeholder = 'Timer Name';
+        titleInput.style.fontSize = '1.2em';
+        titleInput.style.marginBottom = '10px';
+        titleInput.style.width = '100%';
+        titleInput.style.textAlign = 'center';
+        modalContent.appendChild(titleInput);
 
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    saveButton.onclick = () => {
-        const newDuration = parseTimeInput(timerInput.value);
-        onSave(newDuration);
-        modal.remove();
-    };
-    modalContent.appendChild(saveButton);
+        // Duration Input (Number Pad Style)
+        const durationInput = document.createElement('input');
+        durationInput.type = 'text';
+        durationInput.placeholder = 'Enter time (e.g., 23026 for 2:30:26)';
+        durationInput.maxLength = 6;
+        durationInput.value = formatTimeInput(duration.toString());
+        durationInput.addEventListener('input', function () {
+            this.value = formatTimeInput(this.value);
+        });
+        durationInput.style.fontSize = '1.2em';
+        durationInput.style.marginBottom = '10px';
+        durationInput.style.width = '100%';
+        durationInput.style.textAlign = 'center';
+        modalContent.appendChild(durationInput);
 
+        // Save Button
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.style.padding = '10px 20px';
+        saveButton.style.fontSize = '1.2em';
+        saveButton.onclick = () => {
+            const newDuration = parseTimeInput(durationInput.value);
+            const newTitle = titleInput.value || formatTimeForTitle(newDuration);
+            onSave(newDuration, newTitle);
+            modal.remove();
+        };
+        modalContent.appendChild(saveButton);
+
+    } else if (type === 'preset') {
+        // Preset Timer Edit Modal
+        const timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.value = new Date(Date.now() + duration * 1000)
+            .toLocaleTimeString('en-US', { hour12: false });
+        timeInput.style.fontSize = '1.2em';
+        timeInput.style.marginBottom = '10px';
+        timeInput.style.width = '100%';
+        timeInput.style.textAlign = 'center';
+        modalContent.appendChild(timeInput);
+
+        // Save Button
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.style.padding = '10px 20px';
+        saveButton.style.fontSize = '1.2em';
+        saveButton.onclick = () => {
+            const [newHours, newMinutes] = timeInput.value.split(':').map(Number);
+            const newTargetTime = new Date();
+            newTargetTime.setHours(newHours, newMinutes, 0, 0);
+
+            if (newTargetTime < new Date()) {
+                newTargetTime.setDate(newTargetTime.getDate() + 1);
+            }
+
+            const newDuration = Math.floor((newTargetTime - Date.now()) / 1000);
+            onSave(newDuration, timerCard.querySelector('h3').textContent);
+            modal.remove();
+        };
+        modalContent.appendChild(saveButton);
+    }
+
+    // Cancel Button (for both modals)
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
+    cancelButton.style.padding = '10px 20px';
+    cancelButton.style.fontSize = '1.2em';
+    cancelButton.style.marginTop = '10px';
     cancelButton.onclick = () => modal.remove();
     modalContent.appendChild(cancelButton);
 
@@ -266,14 +389,13 @@ function openEditModal(timerCard, duration, type, onSave) {
     document.body.appendChild(modal);
 }
 
-function togglePreset(sectionId) {
-    const presetSection = document.getElementById(`${sectionId}-presets`);
-    if (presetSection) {
-        presetSection.style.display = presetSection.style.display === 'none' ? 'flex' : 'none';
-    }
-}
 
-// Function to start a timer with a preset label and target time
+// -------------------------------
+// 7. Preset Timer Cards
+// -------------------------------
+
+
+// ------ Function to start a timer with a preset label and target time
 function startPresetTimer(label, time) {
     const [hours, minutes, seconds, period] = time.split(/[: ]/);
     let hour = parseInt(hours);
@@ -304,36 +426,43 @@ function startPresetTimer(label, time) {
     createPresetTimerCard(label, targetTime, remainingTimeInSeconds);
 }
 
+
+// ------ Creates a preset timer card.
 function createPresetTimerCard(label, targetTime, duration) {
     const timerCard = document.createElement('div');
     timerCard.className = 'timer-card preset-timer';
 
+    // Title of the Timer
     const titleElement = document.createElement('h3');
     titleElement.textContent = label;
     titleElement.style.fontWeight = 'bold';
     timerCard.appendChild(titleElement);
 
+    // Fixed Target Time
     const targetInfo = document.createElement('p');
     targetInfo.textContent = `Target Time: ${targetTime.toLocaleTimeString('en-US')}`;
     timerCard.appendChild(targetInfo);
 
+    // Countdown Display
     const countdownElement = document.createElement('p');
     countdownElement.className = 'countdown';
     timerCard.appendChild(countdownElement);
 
+    // Start the countdown
     let intervalId = startCountdown(targetTime, countdownElement);
 
+    // Timer Action Buttons (Edit and Clear)
     const timerActions = document.createElement('div');
     timerActions.className = 'timer-actions';
 
     // Edit Button
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
-    editButton.onclick = () => openEditModal(timerCard, duration, 'preset', (newDuration) => {
+    editButton.onclick = () => openEditModal(timerCard, Math.floor((targetTime - new Date()) / 1000), 'preset', (newDuration) => {
         clearInterval(intervalId);
         const newTargetTime = new Date(Date.now() + newDuration * 1000);
         intervalId = startCountdown(newTargetTime, countdownElement);
-        targetInfo.textContent = `Target time: ${formatDuration(newDuration)} (${newTargetTime.toLocaleTimeString('en-US')})`;
+        targetInfo.textContent = `Target Time: ${newTargetTime.toLocaleTimeString('en-US')}`;
     });
     timerActions.appendChild(editButton);
 
@@ -347,7 +476,23 @@ function createPresetTimerCard(label, targetTime, duration) {
     timerActions.appendChild(clearButton);
 
     timerCard.appendChild(timerActions);
+
+    // Append the card to the active timers section
     document.getElementById("active-timers").appendChild(timerCard);
 }
 
+function togglePreset(sectionId) {
+    const presetSection = document.getElementById(`${sectionId}-presets`);
+    if (presetSection) {
+        presetSection.style.display = 
+            presetSection.style.display === 'none' ? 'flex' : 'none';
+    }
+}
+
+// -------------------------------
+// 8. Initialization
+// -------------------------------
+
+
+// ------ Initializes the date and time updates.
 updateDateTime();
