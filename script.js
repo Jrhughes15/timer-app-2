@@ -340,66 +340,112 @@ function openEditModal(timerCard, duration, type, onSave) {
     modalContent.appendChild(modalTitle);
 
     if (type === 'custom') {
-        // Title Input
+        // Title Label and Input
+        const titleLabel = document.createElement('label');
+        titleLabel.textContent = 'Timer Name:';
+        titleLabel.className = 'modal-label';
+        modalContent.appendChild(titleLabel);
+
         const titleInput = document.createElement('input');
         titleInput.type = 'text';
         titleInput.value = timerCard.querySelector('h3').textContent;
-        titleInput.placeholder = 'Timer Name';
-        titleInput.style.fontSize = '1.2em';
-        titleInput.style.marginBottom = '10px';
-        titleInput.style.width = '100%';
-        titleInput.style.textAlign = 'center';
+        titleInput.placeholder = 'Enter Timer Name';
+        titleInput.className = 'modal-input';
         modalContent.appendChild(titleInput);
 
-        // Duration Input (Number Pad Style)
-        const durationInput = document.createElement('input');
-        durationInput.type = 'text';
-        durationInput.placeholder = 'Enter time (e.g., 23026 for 2:30:26)';
-        durationInput.maxLength = 6;
-        durationInput.value = formatTimeInput(duration.toString());
-        durationInput.addEventListener('input', function () {
-            this.value = formatTimeInput(this.value);
-        });
-        durationInput.style.fontSize = '1.2em';
-        durationInput.style.marginBottom = '10px';
-        durationInput.style.width = '100%';
-        durationInput.style.textAlign = 'center';
-        modalContent.appendChild(durationInput);
+        // Time Label and Input
+        const timeLabel = document.createElement('label');
+        timeLabel.textContent = 'Time:';
+        timeLabel.className = 'modal-label';
+        modalContent.appendChild(timeLabel);
 
-        // Save Button
-        const saveButton = document.createElement('button');
-        saveButton.textContent = 'Save';
-        saveButton.style.padding = '10px 20px';
-        saveButton.style.fontSize = '1.2em';
-        saveButton.onclick = () => {
-            const newDuration = parseTimeInput(durationInput.value);
-            const newTitle = titleInput.value || formatTimeForTitle(newDuration);
+        const timeInput = document.createElement('input');
+        timeInput.type = 'text';
+        timeInput.placeholder = 'Enter time (e.g., 125 for 1:25)';
+        timeInput.className = 'modal-input';
+
+        // Convert duration (seconds) back to its raw format
+        const convertToRawInput = (seconds) => {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hrs > 0 ? hrs : ''}${mins > 0 ? mins : '0'}${secs.toString().padStart(2, '0')}`;
+        };
+
+        timeInput.value = convertToRawInput(duration); // Use raw input format
+        timeInput.addEventListener('input', () => {
+            timeInput.value = formatTimeInput(timeInput.value); // Allow user to edit with formatting
+        });
+        modalContent.appendChild(timeInput);
+
+        // Custom Modal Buttons (2x2 grid)
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'modal-buttons custom';
+
+        const saveResumeButton = document.createElement('button');
+        saveResumeButton.textContent = 'Save & Resume';
+        saveResumeButton.className = 'modal-action-btn';
+        saveResumeButton.onclick = () => {
+            const newTitle = titleInput.value || formatDuration(duration);
+            timerCard.querySelector('h3').textContent = newTitle;
+            modal.remove();
+        };
+        buttonContainer.appendChild(saveResumeButton);
+
+        const saveRestartButton = document.createElement('button');
+        saveRestartButton.textContent = 'Save & Restart';
+        saveRestartButton.className = 'modal-action-btn';
+        saveRestartButton.onclick = () => {
+            const newDuration = parseTimeInput(timeInput.value);
+            const newTitle = titleInput.value || formatDuration(newDuration);
             onSave(newDuration, newTitle);
             modal.remove();
         };
-        modalContent.appendChild(saveButton);
+        buttonContainer.appendChild(saveRestartButton);
+
+        const startNewTimerButton = document.createElement('button');
+        startNewTimerButton.textContent = 'Start New Timer';
+        startNewTimerButton.className = 'modal-action-btn';
+        startNewTimerButton.onclick = () => {
+            const newDuration = parseTimeInput(timeInput.value);
+            const newTitle = titleInput.value || formatDuration(newDuration);
+            createCustomTimerCard(newTitle, new Date(Date.now() + newDuration * 1000), newDuration);
+            modal.remove();
+        };
+        buttonContainer.appendChild(startNewTimerButton);
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.className = 'modal-action-btn';
+        cancelButton.onclick = () => modal.remove();
+        buttonContainer.appendChild(cancelButton);
+
+        modalContent.appendChild(buttonContainer);
 
     } else if (type === 'preset') {
-        // Preset Timer Edit Modal
+        const timeLabel = document.createElement('label');
+        timeLabel.textContent = 'Time:';
+        timeLabel.className = 'modal-label';
+        modalContent.appendChild(timeLabel);
+
         const timeInput = document.createElement('input');
         timeInput.type = 'time';
         timeInput.value = new Date(Date.now() + duration * 1000)
             .toLocaleTimeString('en-US', { hour12: false });
-        timeInput.style.fontSize = '1.2em';
-        timeInput.style.marginBottom = '10px';
-        timeInput.style.width = '100%';
-        timeInput.style.textAlign = 'center';
+        timeInput.className = 'modal-input';
         modalContent.appendChild(timeInput);
 
-        // Save Button
+        // Preset Modal Buttons (1 row)
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'modal-buttons preset';
+
         const saveButton = document.createElement('button');
         saveButton.textContent = 'Save';
-        saveButton.style.padding = '10px 20px';
-        saveButton.style.fontSize = '1.2em';
+        saveButton.className = 'modal-action-btn';
         saveButton.onclick = () => {
-            const [newHours, newMinutes] = timeInput.value.split(':').map(Number);
+            const [newHours, newMinutes, newSeconds] = timeInput.value.split(':').map(Number);
             const newTargetTime = new Date();
-            newTargetTime.setHours(newHours, newMinutes, 0, 0);
+            newTargetTime.setHours(newHours, newMinutes, newSeconds || 0);
 
             if (newTargetTime < new Date()) {
                 newTargetTime.setDate(newTargetTime.getDate() + 1);
@@ -409,21 +455,21 @@ function openEditModal(timerCard, duration, type, onSave) {
             onSave(newDuration, timerCard.querySelector('h3').textContent);
             modal.remove();
         };
-        modalContent.appendChild(saveButton);
-    }
+        buttonContainer.appendChild(saveButton);
 
-    // Cancel Button (for both modals)
-    const cancelButton = document.createElement('button');
-    cancelButton.textContent = 'Cancel';
-    cancelButton.style.padding = '10px 20px';
-    cancelButton.style.fontSize = '1.2em';
-    cancelButton.style.marginTop = '10px';
-    cancelButton.onclick = () => modal.remove();
-    modalContent.appendChild(cancelButton);
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.className = 'modal-action-btn';
+        cancelButton.onclick = () => modal.remove();
+        buttonContainer.appendChild(cancelButton);
+
+        modalContent.appendChild(buttonContainer);
+    }
 
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
 }
+
 
 
 // -------------------------------
