@@ -20,24 +20,28 @@
         </div>
         <hr>
 
-        <!-- Stopwatch 1 -->
+        <!-- Stopwatch 1 Section -->
         <div class="stopwatch">
             <div class="stopwatch-display" id="stopwatch1-display">00:00:00</div>
             <div class="stopwatch-buttons">
                 <button class="btn" onclick="startStopwatch('stopwatch1')">Start</button>
                 <button class="btn" onclick="stopStopwatch('stopwatch1')">Stop</button>
+            </div>
+	    <div class="stopwatch-buttons">
                 <button class="btn" onclick="restartStopwatch('stopwatch1')">Restart</button>
                 <button class="btn" onclick="resetStopwatch('stopwatch1')">Reset</button>
             </div>
         </div>
         <hr>
 
-        <!-- Stopwatch 2 -->
+        <!-- Stopwatch 2 Section -->
         <div class="stopwatch">
             <div class="stopwatch-display" id="stopwatch2-display">00:00:00</div>
             <div class="stopwatch-buttons">
                 <button class="btn" onclick="startStopwatch('stopwatch2')">Start</button>
                 <button class="btn" onclick="stopStopwatch('stopwatch2')">Stop</button>
+            </div>
+	    <div class="stopwatch-buttons">
                 <button class="btn" onclick="restartStopwatch('stopwatch2')">Restart</button>
                 <button class="btn" onclick="resetStopwatch('stopwatch2')">Reset</button>
             </div>
@@ -47,8 +51,8 @@
         <!-- Timer Creation Section -->
         <div id="timer-creation">
             <input type="text" id="timer-name" placeholder="Timer Name">
-            <input type="text" id="timer-input" placeholder="Enter Time" maxlength="6" readonly>
-            <div id="number-pad">
+            <input type="text" id="timer-input" placeholder="Enter Time">
+            <div class="number-pad" id="number-pad">
                 <button onclick="appendDigit('1')">1</button>
                 <button onclick="appendDigit('2')">2</button>
                 <button onclick="appendDigit('3')">3</button>
@@ -58,9 +62,9 @@
                 <button onclick="appendDigit('7')">7</button>
                 <button onclick="appendDigit('8')">8</button>
                 <button onclick="appendDigit('9')">9</button>
-                <button onclick="clearTimerInput()">C</button>
+                <button onclick="backspaceTimerInput()">⌫</button>
                 <button onclick="appendDigit('0')">0</button>
-                <button onclick="backspaceTimerInput()">←</button>
+                <button onclick="clearTimerInput()">C</button>
             </div>
             <div class="timer-buttons">
                 <button id="start-timer-btn" onclick="startTimer()">Start</button>
