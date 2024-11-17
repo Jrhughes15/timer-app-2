@@ -231,6 +231,9 @@ function createCustomTimerCard(title, targetTime, duration) {
     const timerCard = document.createElement('div');
     timerCard.className = 'timer-card custom-timer';
 
+    // Add the target time as a data attribute
+    timerCard.dataset.targetTime = targetTime.toISOString(); // Store as timestamp
+
     const titleElement = document.createElement('h3');
     titleElement.textContent = title; // Use formatted title
     timerCard.appendChild(titleElement);
@@ -258,6 +261,9 @@ function createCustomTimerCard(title, targetTime, duration) {
         const newTargetTime = new Date(Date.now() + newDuration * 1000);
         intervalId = startCountdown(newTargetTime, countdownElement);
         targetInfo.textContent = `Target Time: ${formatDuration(newDuration)} (${newTargetTime.toLocaleTimeString('en-US')})`;
+
+        // Update the target time in the data attribute
+        timerCard.dataset.targetTime = newTargetTime.getTime();
     });
     timerActions.appendChild(editButton);
 
@@ -279,11 +285,12 @@ function createCustomTimerCard(title, targetTime, duration) {
 function formatDuration(totalSeconds) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    const seconds = Math.round(totalSeconds % 60); // Round seconds to the nearest whole number
+
     let result = '';
-    if (hours > 0) result += `${hours} hour `;
-    if (minutes > 0) result += `${minutes} min `;
-    result += `${seconds} secs`;
+    if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''} `;
+    if (minutes > 0) result += `${minutes} min${minutes > 1 ? 's' : ''} `;
+    result += `${seconds} sec${seconds > 1 ? 's' : ''}`;
     return result;
 }
 
@@ -514,26 +521,24 @@ function createPresetTimerCard(label, targetTime, duration) {
     const timerCard = document.createElement('div');
     timerCard.className = 'timer-card preset-timer';
 
-    // Title of the Timer
+    // Add the target time as a data attribute
+    timerCard.dataset.targetTime = targetTime.toISOString(); // Store as timestamp
+
     const titleElement = document.createElement('h3');
     titleElement.textContent = label;
     titleElement.style.fontWeight = 'bold';
     timerCard.appendChild(titleElement);
 
-    // Fixed Target Time
     const targetInfo = document.createElement('p');
     targetInfo.textContent = `Target Time: ${targetTime.toLocaleTimeString('en-US')}`;
     timerCard.appendChild(targetInfo);
 
-    // Countdown Display
     const countdownElement = document.createElement('p');
     countdownElement.className = 'countdown';
     timerCard.appendChild(countdownElement);
 
-    // Start the countdown
     let intervalId = startCountdown(targetTime, countdownElement);
 
-    // Timer Action Buttons (Edit and Clear)
     const timerActions = document.createElement('div');
     timerActions.className = 'timer-actions';
 
@@ -545,6 +550,9 @@ function createPresetTimerCard(label, targetTime, duration) {
         const newTargetTime = new Date(Date.now() + newDuration * 1000);
         intervalId = startCountdown(newTargetTime, countdownElement);
         targetInfo.textContent = `Target Time: ${newTargetTime.toLocaleTimeString('en-US')}`;
+
+        // Update the target time in the data attribute
+        timerCard.dataset.targetTime = newTargetTime.getTime();
     });
     timerActions.appendChild(editButton);
 
@@ -558,8 +566,6 @@ function createPresetTimerCard(label, targetTime, duration) {
     timerActions.appendChild(clearButton);
 
     timerCard.appendChild(timerActions);
-
-    // Append the card to the active timers section
     document.getElementById("active-timers").appendChild(timerCard);
 }
 
@@ -572,7 +578,120 @@ function togglePreset(sectionId) {
 }
 
 // -------------------------------
-// 8. Initialization
+// 8. Time Between Modal
+// -------------------------------
+
+
+function openTimeDifferenceModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+
+    // Title
+    const modalTitle = document.createElement('h3');
+    modalTitle.textContent = 'Calculate Time Between Timers';
+    modalContent.appendChild(modalTitle);
+
+    // Dropdown for Timer 1
+    const timer1Label = document.createElement('label');
+    timer1Label.textContent = 'Select First Timer:';
+    modalContent.appendChild(timer1Label);
+
+    const timer1Select = document.createElement('select');
+    timer1Select.className = 'modal-select';
+    populateTimerDropdown(timer1Select);
+    modalContent.appendChild(timer1Select);
+
+    // Dropdown for Timer 2
+    const timer2Label = document.createElement('label');
+    timer2Label.textContent = 'Select Second Timer:';
+    modalContent.appendChild(timer2Label);
+
+    const timer2Select = document.createElement('select');
+    timer2Select.className = 'modal-select';
+    populateTimerDropdown(timer2Select);
+    modalContent.appendChild(timer2Select);
+
+    // Calculate Button
+    const calculateButton = document.createElement('button');
+    calculateButton.textContent = 'Calculate Difference';
+    calculateButton.className = 'modal-action-btn';
+    calculateButton.onclick = () => {
+        const timer1Time = new Date(timer1Select.value);
+        const timer2Time = new Date(timer2Select.value);
+
+        if (isNaN(timer1Time) || isNaN(timer2Time)) {
+            alert('Please select two valid timers.');
+            return;
+        }
+
+        const timeDifference = Math.abs(timer2Time - timer1Time) / 1000; // Difference in seconds
+        const formattedDifference = formatDuration(timeDifference);
+
+        // Display result in the modal
+        resultContainer.textContent = `Time Difference: ${formattedDifference}`;
+    };
+    modalContent.appendChild(calculateButton);
+
+    // Result Container
+    const resultContainer = document.createElement('p');
+    resultContainer.className = 'modal-result';
+    modalContent.appendChild(resultContainer);
+
+    // Close Button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.className = 'modal-action-btn';
+    closeButton.onclick = () => modal.remove();
+    modalContent.appendChild(closeButton);
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+}
+
+function calculateTimeDifference(timer1, timer2) {
+    const time1 = new Date(timer1.dataset.targetTime);
+    const time2 = new Date(timer2.dataset.targetTime);
+
+    if (isNaN(time1) || isNaN(time2)) {
+        return 'Invalid timer data.';
+    }
+
+    const differenceInSeconds = Math.abs(time2 - time1) / 1000;
+
+    const hours = Math.floor(differenceInSeconds / 3600);
+    const minutes = Math.floor((differenceInSeconds % 3600) / 60);
+    const seconds = Math.round(differenceInSeconds % 60);
+
+    const formattedDifference = `${hours > 0 ? hours + ' hr ' : ''}${minutes > 0 ? minutes + ' min ' : ''}${seconds} sec`;
+    return formattedDifference;
+}
+
+function populateTimerDropdown(selectElement) {
+    const activeTimers = document.querySelectorAll('.timer-card');
+    activeTimers.forEach((timerCard) => {
+        const targetTimeAttr = timerCard.dataset.targetTime;
+        const timerTitle = timerCard.querySelector('h3').textContent;
+
+        if (targetTimeAttr) {
+            const targetTime = new Date(targetTimeAttr); // Parse ISO string as Date
+            if (!isNaN(targetTime)) { // Ensure valid date
+                const option = document.createElement('option');
+                option.value = targetTime.toISOString(); // Store ISO string as value
+                option.textContent = `${timerTitle} (${targetTime.toLocaleTimeString('en-US')})`;
+                selectElement.appendChild(option);
+            }
+        }
+    });
+}
+
+
+
+
+// -------------------------------
+// 9. Initialization
 // -------------------------------
 
 
