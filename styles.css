@@ -467,6 +467,7 @@ hr {
 
 .modal-action-btn {
     padding: 15px;
+    width: 100%; 
     font-size: 1.2em;
     cursor: pointer;
     border: none;
@@ -483,6 +484,30 @@ hr {
 .modal-action-btn:hover {
     background-color: #555;
 }
+
+
+/* -------------------------------------------------------------- */
+/* Responsive Adjustments */
+/* -------------------------------------------------------------- */
+
+.modal-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.modal-result {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+
+
 
 
 /* -------------------------------------------------------------- */
