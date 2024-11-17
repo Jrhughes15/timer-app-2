@@ -125,15 +125,14 @@ hr {
 
 #number-pad {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    width: 90%; 
-    max-width: 350px; 
+    max-width: 500px;
     margin: 10px auto;
 }
 
 #number-pad button {
-    padding: 20px;
+    padding: 15px;
     font-size: 1.5em;
     cursor: pointer;
     border: none;
@@ -152,6 +151,25 @@ hr {
     display: flex;
     justify-content: space-between;
     gap: 10px;
+}
+
+/* Special Buttons (Backspace, Clear) */
+#number-pad .special-button {
+    background-color: #444;
+}
+
+#number-pad .special-button:hover {
+    background-color: #666;
+}
+
+/* Action Buttons (Start, Add) */
+#number-pad .action-button {
+    background-color: #222;
+    font-weight: bold;
+}
+
+#number-pad .action-button:hover {
+    background-color: #444;
 }
 
 #start-timer-btn, #add-timer-btn {
@@ -353,9 +371,9 @@ hr {
 }
 
 
-/* ------------------------------- */
+/* -------------------------------------------------------------- */
 /* Color Indicators for Countdown */
-/* ------------------------------- */
+/* -------------------------------------------------------------- */
 
 
 .timer-card.green { background-color: #dff0d8; }
@@ -500,14 +518,10 @@ hr {
 }
 
 .modal-result {
-    margin-top: 20px;
     font-size: 1.2em;
     font-weight: bold;
     color: #333;
 }
-
-
-
 
 
 /* -------------------------------------------------------------- */
