@@ -32,11 +32,6 @@ function openCalendarModal() {
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-content';
 
-    // Title
-    const modalTitle = document.createElement('h3');
-    modalTitle.textContent = 'Calendar';
-    modalContent.appendChild(modalTitle);
-
     // Month and Year Navigation
     const navigationContainer = document.createElement('div');
     navigationContainer.className = 'calendar-navigation';
