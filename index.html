@@ -14,11 +14,16 @@
         </header>
 
 <!----------- Current Date and Time Display ----------->
-        <div id="date-time">
-            <p id="current-date">Saturday - November - 11/9/2024</p>
-            <p id="current-time">2:44:36 pm</p>
-        </div>
-        <hr>
+<div id="date-time">
+    <p id="current-date">
+        <span id="day-name"></span> - <span id="month-name"></span>
+        <br> <!-- Line break -->
+        <span id="date-formatted"></span>
+        <span class="calendar-icon" onclick="openCalendarModal()">📅</span>
+    </p>
+    <p id="current-time"></p>
+</div>
+<hr>
 
 <!----------- Stopwatch 1 Section ----------->
         <div class="stopwatch">
