@@ -6,11 +6,141 @@
 // ------ Updates the date and time displayed on the page every second.
 function updateDateTime() {
     const now = new Date();
-    const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
-    document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
-    document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US');
+
+    // Extract parts of the date and time
+    const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const monthName = now.toLocaleDateString('en-US', { month: 'long' });
+    const dateFormatted = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+    const currentTime = now.toLocaleTimeString('en-US');
+
+    // Update HTML elements
+    document.getElementById('day-name').textContent = dayName;
+    document.getElementById('month-name').textContent = monthName;
+    document.getElementById('date-formatted').textContent = dateFormatted;
+    document.getElementById('current-time').textContent = currentTime;
 }
 setInterval(updateDateTime, 1000);
+
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+// Function to open the calendar modal
+function openCalendarModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+
+    // Title
+    const modalTitle = document.createElement('h3');
+    modalTitle.textContent = 'Calendar';
+    modalContent.appendChild(modalTitle);
+
+    // Month and Year Navigation
+    const navigationContainer = document.createElement('div');
+    navigationContainer.className = 'calendar-navigation';
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '◀';
+    prevButton.className = 'nav-btn';
+    prevButton.onclick = () => updateCalendar(-1);
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '▶';
+    nextButton.className = 'nav-btn';
+    nextButton.onclick = () => updateCalendar(1);
+
+    const monthYearDisplay = document.createElement('span');
+    monthYearDisplay.className = 'month-year-display';
+    monthYearDisplay.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+
+    navigationContainer.appendChild(prevButton);
+    navigationContainer.appendChild(monthYearDisplay);
+    navigationContainer.appendChild(nextButton);
+    modalContent.appendChild(navigationContainer);
+
+    // Calendar container
+    const calendarContainer = document.createElement('div');
+    calendarContainer.className = 'calendar';
+    calendarContainer.innerHTML = generateCalendar(currentMonth, currentYear);
+    modalContent.appendChild(calendarContainer);
+
+    // Return to Current Month Button
+    const returnButton = document.createElement('button');
+    returnButton.textContent = 'Return to Current Month';
+    returnButton.className = 'modal-action-btn return-btn';
+    returnButton.onclick = () => {
+        const today = new Date();
+        currentMonth = today.getMonth();
+        currentYear = today.getFullYear();
+        monthYearDisplay.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+        calendarContainer.innerHTML = generateCalendar(currentMonth, currentYear);
+    };
+    modalContent.appendChild(returnButton);
+
+
+    // Close Button
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.className = 'modal-action-btn';
+    closeButton.onclick = () => modal.remove();
+    modalContent.appendChild(closeButton);
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Helper function to update the calendar
+    function updateCalendar(change) {
+        currentMonth += change;
+
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear -= 1;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear += 1;
+        }
+
+        monthYearDisplay.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+        calendarContainer.innerHTML = generateCalendar(currentMonth, currentYear);
+    }
+}
+
+// Function to generate calendar HTML for a given month and year
+function generateCalendar(month, year) {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    const today = new Date();
+
+    // Add days of the week headers
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let calendarHTML = '<div class="calendar-grid">';
+    calendarHTML += daysOfWeek.map(day => `<div class="calendar-header">${day}</div>`).join('');
+
+    // Empty cells for days before the 1st of the month
+    for (let i = 0; i < firstDayIndex; i++) {
+        calendarHTML += '<div class="calendar-cell empty"></div>';
+    }
+
+    // Add day numbers
+    for (let day = 1; day <= daysInMonth; day++) {
+        const isToday =
+            today.getDate() === day &&
+            today.getMonth() === month &&
+            today.getFullYear() === year;
+
+        calendarHTML += `<div class="calendar-cell ${isToday ? 'current-day' : ''}">${day}</div>`;
+    }
+
+    calendarHTML += '</div>';
+    return calendarHTML;
+}
+
+// Function to get the full name of a month
+function getMonthName(month) {
+    return new Date(2000, month).toLocaleString('en-US', { month: 'long' });
+}
 
 
 // ---------------------------------------------------------------------------------------------
@@ -600,7 +730,7 @@ function openTimeDifferenceModal() {
 
     // Title
     const modalTitle = document.createElement('h3');
-    modalTitle.textContent = 'Calculate Time Between Timers';
+    modalTitle.textContent = 'Time Between Timers';
     modalContent.appendChild(modalTitle);
 
     // Dropdown for Timer 1
