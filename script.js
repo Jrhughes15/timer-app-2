@@ -37,12 +37,12 @@ function openCalendarModal() {
     navigationContainer.className = 'calendar-navigation';
 
     const prevButton = document.createElement('button');
-    prevButton.textContent = '◀';
+    prevButton.textContent = '<';
     prevButton.className = 'nav-btn';
     prevButton.onclick = () => updateCalendar(-1);
 
     const nextButton = document.createElement('button');
-    nextButton.textContent = '▶';
+    nextButton.textContent = '>';
     nextButton.className = 'nav-btn';
     nextButton.onclick = () => updateCalendar(1);
 
